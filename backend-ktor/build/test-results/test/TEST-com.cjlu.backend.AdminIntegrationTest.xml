@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.cjlu.backend.AdminIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-06-12T10:54:48.394Z" hostname="Yassines-MacBook-Air.local" time="0.021">
+  <properties/>
+  <testcase name="requestsJson_requiresAdminSession" classname="com.cjlu.backend.AdminIntegrationTest" time="0.005"/>
+  <testcase name="dashboard_requiresSession" classname="com.cjlu.backend.AdminIntegrationTest" time="0.004"/>
+  <testcase name="legacyRoot_redirectsToAdminDashboard" classname="com.cjlu.backend.AdminIntegrationTest" time="0.003"/>
+  <testcase name="loginPage_rendersFreemarkerTemplate" classname="com.cjlu.backend.AdminIntegrationTest" time="0.005"/>
+  <testcase name="loginPage_showsErrorQuery" classname="com.cjlu.backend.AdminIntegrationTest" time="0.004"/>
+  <system-out><![CDATA[2026-06-12 18:54:48.396 [DefaultDispatcher-worker-3 @call-context#18] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-06-12 18:54:48.398 [DefaultDispatcher-worker-3 @call-context#18] INFO  io.ktor.test - Application started in 0.002 seconds.
+2026-06-12 18:54:48.398 [DefaultDispatcher-worker-5 @coroutine#19] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-12 18:54:48.398 [DefaultDispatcher-worker-5 @coroutine#19] INFO  io.ktor.test - Responding at https://localhost:443
+2026-06-12 18:54:48.401 [DefaultDispatcher-worker-2 @call-context#27] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-06-12 18:54:48.402 [DefaultDispatcher-worker-2 @call-context#27] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-06-12 18:54:48.402 [DefaultDispatcher-worker-3 @coroutine#28] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-12 18:54:48.402 [DefaultDispatcher-worker-3 @coroutine#28] INFO  io.ktor.test - Responding at https://localhost:443
+2026-06-12 18:54:48.404 [DefaultDispatcher-worker-1 @call-context#36] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-06-12 18:54:48.405 [DefaultDispatcher-worker-1 @call-context#36] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-06-12 18:54:48.405 [DefaultDispatcher-worker-2 @coroutine#37] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-12 18:54:48.406 [DefaultDispatcher-worker-2 @coroutine#37] INFO  io.ktor.test - Responding at https://localhost:443
+2026-06-12 18:54:48.407 [DefaultDispatcher-worker-1 @call-context#45] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-06-12 18:54:48.408 [DefaultDispatcher-worker-1 @call-context#45] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-06-12 18:54:48.408 [DefaultDispatcher-worker-3 @coroutine#46] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-12 18:54:48.408 [DefaultDispatcher-worker-3 @coroutine#46] INFO  io.ktor.test - Responding at https://localhost:443
+2026-06-12 18:54:48.412 [DefaultDispatcher-worker-1 @call-context#57] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-06-12 18:54:48.413 [DefaultDispatcher-worker-1 @call-context#57] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-06-12 18:54:48.413 [DefaultDispatcher-worker-3 @coroutine#58] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-12 18:54:48.413 [DefaultDispatcher-worker-3 @coroutine#58] INFO  io.ktor.test - Responding at https://localhost:443
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

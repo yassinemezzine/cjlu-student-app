@@ -1,0 +1,12 @@
+# Copy relevant lines into `local.properties` (gitignored). Android Studio also writes `sdk.dir` there.
+#
+# Android client — `cjlu.student.api.key` must match the backend student API key (env STUDENT_API_KEY on first DB
+# bootstrap, or the value already stored in `app_config`). Leave host/port unset only if you override them here.
+#
+# cjlu.student.api.key=your-secret-key-here
+# cjlu.api.host=10.0.2.2
+# cjlu.api.port=8080
+#
+# Backend (Ktor) — production-style: set STUDENT_API_KEY, JWT_SECRET, ADMIN_USERNAME, and ADMIN_PASSWORD.
+# Optional local-only escape hatch (never in production): CJLU_ALLOW_INSECURE_DEV_DEFAULTS=true
+# uses built-in dev fallbacks for missing secrets and restores legacy admin/admin+cjlu2026 when admin env is unset.

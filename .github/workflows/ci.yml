@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Backend tests
+        run: ./gradlew :shared-contract:build :backend-ktor:test --console=plain
+        env:
+          CJLU_ALLOW_INSECURE_DEV_DEFAULTS: "true"
+
+  android-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Prepare local.properties
+        run: |
+          printf '%s\n' \
+            'cjlu.student.api.key=cjlu-insecure-local-student-api-key-do-not-use-in-production' \
+            >> local.properties
+
+      - name: Compile debug APK
+        run: ./gradlew :app:assembleDebug --console=plain

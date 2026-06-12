@@ -1,0 +1,38 @@
+[
+    {
+        "id": "CJLU-20260510-001",
+        "serviceId": "back_to_cjlu",
+        "studentId": "20230950",
+        "contactInfo": "13812345678",
+        "notes": "Scheduled return for Autumn semester. Flight MH388.",
+        "status": "completed",
+        "createdAtMillis": 1778410176253
+    },
+    {
+        "id": "CJLU-20260511-042",
+        "serviceId": "repair_request",
+        "studentId": "20230950",
+        "contactInfo": "Dormitory 5, Room 302",
+        "notes": "Water leakage in the bathroom ceiling.",
+        "status": "completed",
+        "createdAtMillis": 1778496576253
+    },
+    {
+        "id": "CJLU-20260512-105",
+        "serviceId": "ask_leave",
+        "studentId": "20230950",
+        "contactInfo": "Medical Certificate Attached",
+        "notes": "Sick leave for 2 days due to flu.",
+        "status": "in_review",
+        "createdAtMillis": 1778582976253
+    },
+    {
+        "id": "CJLU-20260513-005",
+        "serviceId": "bank_card_information",
+        "studentId": "20230950",
+        "contactInfo": "ICBC Card ending in 4567",
+        "notes": "Updating scholarship disbursement account.",
+        "status": "in_review",
+        "createdAtMillis": 1778662176253
+    }
+]
