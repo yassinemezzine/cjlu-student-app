@@ -14,8 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,11 +26,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.School
+import com.cjlu.studentapp.util.rememberWindowSizeClass
+import com.cjlu.studentapp.util.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +75,7 @@ import com.cjlu.studentapp.network.RealtimeSyncCoordinator
 import com.cjlu.studentapp.network.RealtimeSyncEffect
 import com.cjlu.studentapp.notifications.CjluNotificationHelper
 import com.cjlu.studentapp.notifications.FcmTokenRegistrar
+import com.cjlu.studentapp.notifications.NotificationServiceStarter
 import com.cjlu.studentapp.prefs.AppNotificationPrefs
 import com.cjlu.studentapp.prefs.WidgetStatsStore
 import com.cjlu.studentapp.ui.components.BottomNavItem
@@ -176,8 +186,29 @@ fun CJLUStudentApp(
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val messages by MessagesRepository.observeMessages(context, studentId)
         .collectAsStateWithLifecycle(initialValue = emptyList())
+    var academicRefreshNonce by remember { mutableStateOf(0) }
     var serviceItems by remember(studentId) {
-        mutableStateOf(emptyList<ServiceItem>())
+        mutableStateOf(ServiceCatalogRepository.getCachedOrFallback(context))
+    }
+    var isOffCampus by remember(studentId) { mutableStateOf(false) }
+
+    LaunchedEffect(studentId, academicRefreshNonce) {
+        if (studentId.isNotBlank()) {
+            try {
+                val dorm = AcademicRepository.loadDormitory(context, studentId)
+                isOffCampus = dorm.isOffCampus
+            } catch (e: Exception) {
+                Log.w("MainActivity", "Failed to load dormitory state for off-campus check", e)
+            }
+        }
+    }
+
+    val filteredServiceItems = remember(serviceItems, isOffCampus) {
+        if (isOffCampus) {
+            serviceItems.filter { it.id != "repair_request" }
+        } else {
+            serviceItems
+        }
     }
     var isConnected by remember { mutableStateOf(true) }
     var backendAvailable by remember { mutableStateOf(true) }
@@ -187,7 +218,7 @@ fun CJLUStudentApp(
 
     suspend fun refreshServicesOnly() {
         try {
-            serviceItems = ServiceCatalogRepository.loadServices()
+            serviceItems = ServiceCatalogRepository.loadServices(context)
         } catch (e: Exception) {
             Log.e("CJLUStudentApp", "load services failed", e)
         }
@@ -207,7 +238,6 @@ fun CJLUStudentApp(
         backendAvailable = true
     }
 
-    var academicRefreshNonce by remember { mutableStateOf(0) }
     var lastAttendanceNotificationAtMillis by remember { mutableStateOf(0L) }
 
     fun maybeShowAttendanceUpdatedNotification() {
@@ -330,130 +360,171 @@ fun CJLUStudentApp(
     }
 
     DisposableEffect(studentId) {
+        if (studentId.isNotEmpty()) {
+            NotificationServiceStarter.start(context)
+        }
         realtimeSync.start()
         onDispose {
             realtimeSync.stop()
+            if (studentId.isEmpty()) {
+                NotificationServiceStarter.stop(context)
+            }
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            if (!isConnected && showBottomBar) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .background(Color(0xFFFFEBEE))
-                        .padding(vertical = 4.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.common_offline_mode),
-                        color = Color(0xFFC62828),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+    val windowSizeClass = rememberWindowSizeClass()
+    val isWide = windowSizeClass == WindowSizeClass.WIDE
+
+    Row(modifier = Modifier.fillMaxSize()) {
+        if (isWide && showBottomBar) {
+            NavigationRail(
+                containerColor = MaterialTheme.colorScheme.surface,
+                header = {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Icon(
+                        imageVector = Icons.Filled.School,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            ) {
+                BottomNavItem.items.forEach { item ->
+                    val label = stringResource(item.labelRes)
+                    NavigationRailItem(
+                        selected = currentRoute == item.screen.route,
+                        onClick = { navController.navigateToMainTab(item.screen.route) },
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = label,
+                            )
+                        },
+                        label = { Text(text = label) },
                     )
                 }
             }
-            if (!backendAvailable) {
-                TopAppBar(
-                    title = { Text(text = "Backend unavailable") },
-                )
-            }
-        },
-        bottomBar = {
-            if (showBottomBar) {
-                NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                    BottomNavItem.items.forEach { item ->
-                        val label = stringResource(item.labelRes)
+        }
 
-                        NavigationBarItem(
-                            selected = currentRoute == item.screen.route,
-                            onClick = { navController.navigateToMainTab(item.screen.route) },
-                            icon = {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = label,
-                                )
-                            },
-                            label = { Text(text = label) },
+        Scaffold(
+            modifier = Modifier.weight(1f),
+            containerColor = MaterialTheme.colorScheme.background,
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            topBar = {
+                if (!isConnected && showBottomBar) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .background(Color(0xFFFFEBEE))
+                            .padding(vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.common_offline_mode),
+                            color = Color(0xFFC62828),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp
                         )
                     }
                 }
+                if (!backendAvailable) {
+                    TopAppBar(
+                        title = { Text(text = "Backend unavailable") },
+                    )
+                }
+            },
+            bottomBar = {
+                if (!isWide && showBottomBar) {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                        BottomNavItem.items.forEach { item ->
+                            val label = stringResource(item.labelRes)
+
+                            NavigationBarItem(
+                                selected = currentRoute == item.screen.route,
+                                onClick = { navController.navigateToMainTab(item.screen.route) },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = label,
+                                    )
+                                },
+                                label = { Text(text = label) },
+                            )
+                        }
+                    }
+                }
             }
-        }
-    ) { innerPadding ->
-        AppNavigation(
-            navController = navController,
-            selectedLanguage = selectedLanguage,
-            currentStudentId = authSession.studentId,
-            currentStudentName = authSession.studentName,
-            currentStudyYear = authSession.studyYear,
-            currentMajor = authSession.major,
-            currentSchool = authSession.school,
-            overallAttendancePercent = authSession.overallAttendancePercent,
-            classUpdateNotice = authSession.classUpdateNotice,
-            academicRefreshNonce = academicRefreshNonce,
-            backendAvailable = backendAvailable,
-            serviceRequests = serviceRequests,
-            serviceItems = serviceItems,
-            messages = messages,
-            onRefreshRequests = { refreshRemoteData() },
-            onReloadMessages = {
-                scope.launch {
-                    val (_, messagesOnline) = MessagesRepository.syncMessages(context, studentId)
-                    backendAvailable = messagesOnline
-                    if (!messagesOnline) {
-                        markBackendUnavailable()
-                    } else {
-                        markBackendAvailable()
-                    }
-                }
-            },
-            onSetMessageRead = { messageId, read ->
-                scope.launch {
-                    val ok = MessagesRepository.setMessageRead(context, studentId, messageId, read)
-                    if (!ok) markBackendUnavailable()
-                }
-            },
-            onLogout = {
-                val studentId = authSession.studentId
-                AuthManager.signOut(context)
-                if (studentId.isNotBlank()) {
+        ) { innerPadding ->
+            AppNavigation(
+                navController = navController,
+                selectedLanguage = selectedLanguage,
+                currentStudentId = authSession.studentId,
+                currentStudentName = authSession.studentName,
+                currentStudyYear = authSession.studyYear,
+                currentMajor = authSession.major,
+                currentSchool = authSession.school,
+                overallAttendancePercent = authSession.overallAttendancePercent,
+                classUpdateNotice = authSession.classUpdateNotice,
+                academicRefreshNonce = academicRefreshNonce,
+                backendAvailable = backendAvailable,
+                serviceRequests = serviceRequests,
+                serviceItems = filteredServiceItems,
+                messages = messages,
+                onRefreshRequests = { refreshRemoteData() },
+                onReloadMessages = {
                     scope.launch {
-                        AcademicRepository.clearCacheForStudent(context, studentId)
-                        AppDatabase.getDatabase(context)
-                            .inboxMessageDao()
-                            .deleteForStudent(studentId)
+                        val (_, messagesOnline) = MessagesRepository.syncMessages(context, studentId)
+                        backendAvailable = messagesOnline
+                        if (!messagesOnline) {
+                            markBackendUnavailable()
+                        } else {
+                            markBackendAvailable()
+                        }
                     }
-                }
-                authSession = AuthManager.loadSession(context)
-            },
-            onChangePassword = { currentPassword, newPassword ->
-                AuthManager.changePassword(context, currentPassword, newPassword)
-            },
-            onLanguageSelected = { language ->
-                selectedLanguage = language
-                onLanguageSelected(language)
-            },
-            onSaveProfile = { major, school ->
-                val ok = AuthManager.updateProfileOnServer(context, major, school)
-                if (ok) {
+                },
+                onSetMessageRead = { messageId, read ->
+                    scope.launch {
+                        val ok = MessagesRepository.setMessageRead(context, studentId, messageId, read)
+                        if (!ok) markBackendUnavailable()
+                    }
+                },
+                onLogout = {
+                    val studentId = authSession.studentId
+                    AuthManager.signOut(context)
+                    if (studentId.isNotBlank()) {
+                        scope.launch {
+                            AcademicRepository.clearCacheForStudent(context, studentId)
+                            AppDatabase.getDatabase(context)
+                                .inboxMessageDao()
+                                .deleteForStudent(studentId)
+                        }
+                    }
                     authSession = AuthManager.loadSession(context)
-                }
-                ok
-            },
-            onSubmitServiceRequest = { submission, uri ->
-                RequestManager.createRequest(context, submission, uri)
-            },
-            onAfterRequestSubmitted = {
-                scope.launch { RequestManager.syncRequests(context, studentId) }
-            },
-            modifier = Modifier.padding(innerPadding)
-        )
+                },
+                onChangePassword = { currentPassword, newPassword ->
+                    AuthManager.changePassword(context, currentPassword, newPassword)
+                },
+                onLanguageSelected = { language ->
+                    selectedLanguage = language
+                    onLanguageSelected(language)
+                },
+                onSaveProfile = { major, school ->
+                    val ok = AuthManager.updateProfileOnServer(context, major, school)
+                    if (ok) {
+                        authSession = AuthManager.loadSession(context)
+                    }
+                    ok
+                },
+                onSubmitServiceRequest = { submission, uri ->
+                    RequestManager.createRequest(context, submission, uri)
+                },
+                onAfterRequestSubmitted = {
+                    scope.launch { RequestManager.syncRequests(context, studentId) }
+                },
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
