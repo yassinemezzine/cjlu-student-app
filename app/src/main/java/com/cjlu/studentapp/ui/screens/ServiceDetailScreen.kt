@@ -37,11 +37,12 @@ fun ServiceDetailScreen(
         "transcripts" -> {
             TranscriptDetailScreen(
                 studentId = studentDefaults.studentId,
+                refreshNonce = academicRefreshNonce,
                 onBack = onBack,
             )
             return
         }
-        "class_schedule" -> {
+        "school_calendar" -> {
             SchoolCalendarScreen(
                 studentId = studentDefaults.studentId,
                 refreshNonce = academicRefreshNonce,
@@ -49,9 +50,10 @@ fun ServiceDetailScreen(
             )
             return
         }
-        "changing_room" -> {
-            DormitoryDetailScreen(
+        "class_schedule" -> {
+            ClassScheduleDetailScreen(
                 studentId = studentDefaults.studentId,
+                refreshNonce = academicRefreshNonce,
                 onBack = onBack,
             )
             return

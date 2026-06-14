@@ -13,7 +13,6 @@ import com.cjlu.studentapp.data.StudentRequest
 import com.cjlu.studentapp.localization.AppLanguage
 import com.cjlu.studentapp.network.api.MessageDto
 import com.cjlu.studentapp.ui.screens.AttendanceDetailScreen
-import com.cjlu.studentapp.ui.screens.BankCardInformationScreen
 import com.cjlu.studentapp.ui.screens.HomeScreen
 import com.cjlu.studentapp.ui.screens.MessagesScreen
 import com.cjlu.studentapp.ui.screens.ProfileScreen
@@ -74,7 +73,7 @@ fun AppNavigation(
                 refreshNonce = academicRefreshNonce,
                 onRefresh = onRefreshRequests,
                 onServiceSelected = { serviceId ->
-                    if (serviceId == "class_schedule") {
+                    if (serviceId == "class_schedule" || serviceId == "transcripts") {
                         navController.navigate(Screen.ServiceDetail.createRoute(serviceId))
                     } else if (serviceId == "school_calendar") {
                         navController.navigate(Screen.SchoolCalendar.route)
@@ -92,7 +91,7 @@ fun AppNavigation(
                 serviceItems = serviceItems,
                 requests = serviceRequests,
             ) { serviceId ->
-                if (serviceId == "class_schedule") {
+                if (serviceId == "class_schedule" || serviceId == "transcripts") {
                     navController.navigate(Screen.ServiceDetail.createRoute(serviceId))
                 } else if (serviceId == "school_calendar") {
                     navController.navigate(Screen.SchoolCalendar.route)
@@ -107,7 +106,7 @@ fun AppNavigation(
                 onReloadMessages = onReloadMessages,
                 onSetMessageRead = onSetMessageRead,
             ) { serviceId ->
-                if (serviceId == "class_schedule") {
+                if (serviceId == "class_schedule" || serviceId == "transcripts") {
                     navController.navigate(Screen.ServiceDetail.createRoute(serviceId))
                 } else if (serviceId == "school_calendar") {
                     navController.navigate(Screen.SchoolCalendar.route)
@@ -127,7 +126,7 @@ fun AppNavigation(
                 requests = serviceRequests,
                 serviceItems = serviceItems,
                 onRequestSelected = { serviceId ->
-                    if (serviceId == "class_schedule") {
+                    if (serviceId == "class_schedule" || serviceId == "transcripts") {
                         navController.navigate(Screen.ServiceDetail.createRoute(serviceId))
                     } else if (serviceId == "school_calendar") {
                         navController.navigate(Screen.SchoolCalendar.route)
@@ -140,14 +139,6 @@ fun AppNavigation(
                 onLanguageSelected = onLanguageSelected,
                 onSaveProfile = onSaveProfile,
             )
-        }
-        composable(Screen.BankCardInformation.route) {
-            BankCardInformationScreen(
-                serviceItems = serviceItems,
-                studentDefaults = studentDefaults,
-                onSubmitServiceRequest = onSubmitServiceRequest,
-                onAfterRequestSubmitted = onAfterRequestSubmitted,
-            ) { navController.popBackStack() }
         }
         composable(Screen.AttendanceDetail.route) {
             AttendanceDetailScreen(

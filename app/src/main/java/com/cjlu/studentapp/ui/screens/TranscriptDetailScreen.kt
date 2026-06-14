@@ -1,11 +1,14 @@
 package com.cjlu.studentapp.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import com.cjlu.studentapp.util.adaptiveContentWidth
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +45,7 @@ import com.cjlu.studentapp.network.api.TranscriptCourseDto
 @Composable
 fun TranscriptDetailScreen(
     studentId: String,
+    refreshNonce: Int = 0,
     onBack: () -> Unit,
 ) {
     var loading by remember { mutableStateOf(true) }
@@ -49,7 +53,7 @@ fun TranscriptDetailScreen(
     var transcript by remember { mutableStateOf<StudentTranscriptDto?>(null) }
     val context = LocalContext.current
 
-    LaunchedEffect(studentId) {
+    LaunchedEffect(studentId, refreshNonce) {
         loading = true
         error = null
         try {
@@ -64,6 +68,7 @@ fun TranscriptDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
                 title = { Text(stringResource(R.string.transcript_detail_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -111,11 +116,17 @@ private fun TranscriptContent(
     transcript: StudentTranscriptDto,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
+    Box(
         modifier = modifier.fillMaxSize(),
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .adaptiveContentWidth()
+                .fillMaxWidth(),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
         item {
             Card(
                 shape = RoundedCornerShape(20.dp),
@@ -172,6 +183,7 @@ private fun TranscriptContent(
             TranscriptCourseRow(course)
         }
     }
+}
 }
 
 @Composable
