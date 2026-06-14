@@ -23,7 +23,7 @@
                     <#list calendarEvents as event>
                         <tr class="event-row">
                             <td>
-                                <input type="text" name="eventDate" class="input" value="${event.date?html}" required placeholder="e.g. Sep 8, 2026">
+                                <input type="date" name="eventDate" class="input" value="${event.date?html}" required>
                             </td>
                             <td>
                                 <input type="text" name="eventTitleEn" class="input" value="${event.titleEn?html}" required placeholder="Title EN" style="margin-bottom: 4px;">
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.className = 'event-row';
             row.innerHTML = `
                 <td>
-                    <input type="text" name="eventDate" class="input" value="" required placeholder="e.g. Sep 8, 2026">
+                    <input type="date" name="eventDate" class="input" value="" required>
                 </td>
                 <td>
                     <input type="text" name="eventTitleEn" class="input" value="" required placeholder="Title EN" style="margin-bottom: 4px;">

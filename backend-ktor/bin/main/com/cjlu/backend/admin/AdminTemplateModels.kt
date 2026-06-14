@@ -6,9 +6,11 @@ import com.cjlu.backend.Database
 import com.cjlu.backend.RequestStatus
 import com.cjlu.backend.StudentAttendanceDetailDto
 import com.cjlu.backend.StudentRequest
+import com.cjlu.backend.StudentTranscriptDto
 import com.cjlu.backend.StudentTimetableDto
 import com.cjlu.backend.TimetableSlotDto
 import com.cjlu.backend.AcademicRepository
+import com.cjlu.contract.TranscriptCourseDto
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -85,6 +87,14 @@ private fun timetableSlotRow(index: Int, slot: TimetableSlotDto): Map<String, An
     "roomName" to slot.roomName,
 )
 
+private fun transcriptCourseRow(course: TranscriptCourseDto): Map<String, Any?> = mapOf(
+    "courseCode" to course.courseCode,
+    "courseName" to course.courseName,
+    "credits" to course.credits,
+    "scorePercent" to course.scorePercent,
+    "gradePoint" to course.gradePoint,
+)
+
 fun loginTemplateModel(showError: Boolean): Map<String, Any?> =
     mapOf("showError" to showError)
 
@@ -99,6 +109,7 @@ fun dashboardErrorMessage(errorCode: String?): String? = when (errorCode) {
     "no_registered_courses" -> "Enter attendance for at least one course before saving."
     "message_empty_fields" -> "Message title and body (English) are required."
     "message_unknown_student" -> "That student ID is not in the roster."
+    "invalid_grade" -> "Score must be 0–100 and grade point must be ≥ 0."
     else -> null
 }
 
@@ -107,6 +118,7 @@ fun dashboardSuccessMessage(successCode: String?): String? = when (successCode) 
     "timetable_saved" -> "Class schedule saved and student app notified."
     "learning_saved" -> "Learning alerts saved and student app notified."
     "message_sent" -> "Inbox message saved and connected student apps notified."
+    "transcript_saved" -> "Transcript saved and student app notified."
     else -> null
 }
 
@@ -117,6 +129,7 @@ fun dashboardTemplateModel(
     selectedStudentId: String? = null,
     attendanceDetail: StudentAttendanceDetailDto? = null,
     timetable: StudentTimetableDto? = null,
+    transcript: StudentTranscriptDto? = null,
     calendarData: Database.AcademicCalendarData? = null,
     classCourses: List<AcademicRepository.ClassCourseOption> = emptyList(),
     errorCode: String? = null,
@@ -206,6 +219,8 @@ fun dashboardTemplateModel(
         "courseAttendanceRows" to attendanceDetail?.courses.orEmpty().map(::courseAttendanceRow),
         "weeklyTrend" to weeklyTrend,
         "timetableSlots" to timetable?.slots.orEmpty().mapIndexed(::timetableSlotRow),
+        "transcriptCourses" to transcript?.courses.orEmpty().map(::transcriptCourseRow),
+        "transcriptGpa" to (transcript?.cumulativeGpa ?: 0.0),
         "calendarEvents" to (calendarData?.events ?: emptyList()),
         "classCourses" to classCourses.map { c ->
             mapOf("code" to c.code, "name" to c.nameEn)

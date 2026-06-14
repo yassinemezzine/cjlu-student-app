@@ -41,6 +41,9 @@ private fun ApplicationCall.buildDashboardModel(
     timetable = selectedStudentId?.trim()?.takeIf { it.isNotEmpty() }?.let {
         AcademicRepository.getTimetable(it, preferChinese = false)
     },
+    transcript = selectedStudentId?.trim()?.takeIf { it.isNotEmpty() }?.let {
+        AcademicRepository.getTranscript(it, preferChinese = false)
+    },
     calendarData = Database.getAcademicCalendarData(),
     classCourses = AcademicRepository.listClassCourses(),
     errorCode = errorCode,
@@ -215,6 +218,34 @@ fun Route.adminPageRoutes() {
                     call.respondRedirect("${AdminPaths.DASHBOARD}?success=calendar_saved#calendar")
                 AdminAcademicService.CalendarResult.InvalidEvent ->
                     call.respondRedirect("${AdminPaths.DASHBOARD}?error=invalid_calendar_event#calendar")
+            }
+        }
+
+        post("student-transcript") {
+            val params = call.receiveParameters()
+            val studentId = params["studentId"]?.trim().orEmpty()
+            if (studentId.isEmpty()) {
+                call.respondRedirect("${AdminPaths.DASHBOARD}?error=student_required")
+                return@post
+            }
+            when (
+                AdminAcademicService.saveTranscript(
+                    studentId = studentId,
+                    courseCodes = params.getAll("courseCode") ?: emptyList(),
+                    scorePercents = params.getAll("scorePercent") ?: emptyList(),
+                    gradePoints = params.getAll("gradePoint") ?: emptyList(),
+                )
+            ) {
+                is AdminAcademicService.TranscriptResult.Success ->
+                    call.respondRedirect(
+                        "${AdminPaths.dashboardWithStudent(studentId)}&success=transcript_saved#transcript",
+                    )
+                AdminAcademicService.TranscriptResult.InvalidGrade ->
+                    call.respondRedirect(
+                        "${AdminPaths.dashboardWithStudent(studentId)}&error=invalid_grade#transcript",
+                    )
+                AdminAcademicService.TranscriptResult.UnknownStudent ->
+                    call.respondRedirect("${AdminPaths.DASHBOARD}?error=unknown_student")
             }
         }
 

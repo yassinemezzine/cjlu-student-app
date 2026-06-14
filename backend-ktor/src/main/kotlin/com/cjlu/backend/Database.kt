@@ -362,22 +362,39 @@ object Database {
         val jsonStr = AppConfig.selectAll()
             .where { AppConfig.name eq ACADEMIC_CALENDAR_CONFIG_NAME }
             .map { it[AppConfig.value] }
-            .singleOrNull() ?: return@transaction AcademicCalendarData(
+            .singleOrNull()
+        if (jsonStr == null) {
+            val defaultData = AcademicCalendarData(
                 AcademicDataSeed.CURRENT_ACADEMIC_YEAR,
                 AcademicDataSeed.CURRENT_SEMESTER,
-                emptyList(),
-                emptyList()
+                AcademicDataSeed.academicCalendarMonths,
+                AcademicDataSeed.academicCalendarEvents
             )
-        try {
+            AppConfig.insert {
+                it[name] = ACADEMIC_CALENDAR_CONFIG_NAME
+                it[value] = json.encodeToString(AcademicCalendarData.serializer(), defaultData)
+            }
+            return@transaction defaultData
+        }
+        val data = try {
             json.decodeFromString(AcademicCalendarData.serializer(), jsonStr)
         } catch (e: Exception) {
-            AcademicCalendarData(
+            null
+        }
+
+        if (data == null || data.months.isEmpty() || data.events.isEmpty()) {
+            val defaultData = AcademicCalendarData(
                 AcademicDataSeed.CURRENT_ACADEMIC_YEAR,
                 AcademicDataSeed.CURRENT_SEMESTER,
-                emptyList(),
-                emptyList()
+                AcademicDataSeed.academicCalendarMonths,
+                AcademicDataSeed.academicCalendarEvents
             )
+            AppConfig.update({ AppConfig.name eq ACADEMIC_CALENDAR_CONFIG_NAME }) {
+                it[value] = json.encodeToString(AcademicCalendarData.serializer(), defaultData)
+            }
+            return@transaction defaultData
         }
+        data
     }
 
     fun saveAcademicCalendarData(data: AcademicCalendarData) = transaction {

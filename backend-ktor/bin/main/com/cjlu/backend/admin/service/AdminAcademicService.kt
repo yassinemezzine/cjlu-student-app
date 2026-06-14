@@ -1,6 +1,7 @@
 package com.cjlu.backend.admin.service
 
 import com.cjlu.backend.AcademicRepository
+import com.cjlu.backend.AcademicDataSeed
 import com.cjlu.backend.StudentProfileDto
 import com.cjlu.backend.StudentTimetableDto
 import com.cjlu.backend.websocket.WebSocketHub
@@ -23,6 +24,12 @@ object AdminAcademicService {
     sealed class CalendarResult {
         data object Success : CalendarResult()
         data object InvalidEvent : CalendarResult()
+    }
+
+    sealed class TranscriptResult {
+        data class Success(val transcript: com.cjlu.backend.StudentTranscriptDto) : TranscriptResult()
+        data object UnknownStudent : TranscriptResult()
+        data object InvalidGrade : TranscriptResult()
     }
 
     private val timePattern = Regex("""^\d{2}:\d{2}$""")
@@ -154,5 +161,38 @@ object AdminAcademicService {
         }
 
         return CalendarResult.Success
+    }
+
+    suspend fun saveTranscript(
+        studentId: String,
+        courseCodes: List<String>,
+        scorePercents: List<String>,
+        gradePoints: List<String> = emptyList(),
+    ): TranscriptResult {
+        val sid = studentId.trim()
+        if (sid.isEmpty()) return TranscriptResult.UnknownStudent
+
+        val patches = mutableListOf<AcademicRepository.TranscriptGradePatch>()
+        val count = maxOf(courseCodes.size, scorePercents.size)
+        for (i in 0 until count) {
+            val code = courseCodes.getOrNull(i)?.trim().orEmpty()
+            if (code.isEmpty()) continue
+            val score = scorePercents.getOrNull(i)?.trim()?.toIntOrNull()
+                ?: return TranscriptResult.InvalidGrade
+            if (score !in 0..100) return TranscriptResult.InvalidGrade
+            val gp = AcademicDataSeed.gradePointFromScore(score)
+            patches.add(
+                AcademicRepository.TranscriptGradePatch(
+                    courseCode = code,
+                    scorePercent = score,
+                    gradePoint = gp,
+                )
+            )
+        }
+
+        val transcript = AcademicRepository.replaceTranscriptGrades(sid, patches)
+            ?: return TranscriptResult.UnknownStudent
+        WebSocketHub.notifyAcademicUpdated(sid, "transcript")
+        return TranscriptResult.Success(transcript)
     }
 }

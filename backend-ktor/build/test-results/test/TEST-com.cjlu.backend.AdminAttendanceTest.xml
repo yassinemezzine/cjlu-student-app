@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.cjlu.backend.AdminAttendanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-12T10:54:37.259Z" hostname="Yassines-MacBook-Air.local" time="11.133">
+<testsuite name="com.cjlu.backend.AdminAttendanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-14T09:49:03.402Z" hostname="Yassines-MacBook-Air.local" time="10.958">
   <properties/>
-  <testcase name="attendancePanel_rendersDefaultCoursesForLoggedInAdmin" classname="com.cjlu.backend.AdminAttendanceTest" time="11.132"/>
-  <system-out><![CDATA[2026-06-12 18:54:37.505 [DefaultDispatcher-worker-1 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
-2026-06-12 18:54:37.589 [DefaultDispatcher-worker-1 @call-context#3] INFO  io.ktor.test - Application started in 0.087 seconds.
-2026-06-12 18:54:37.589 [DefaultDispatcher-worker-3 @coroutine#4] INFO  io.ktor.test - Responding at http://localhost:80
-2026-06-12 18:54:37.589 [DefaultDispatcher-worker-3 @coroutine#4] INFO  io.ktor.test - Responding at https://localhost:443
+  <testcase name="attendancePanel_rendersDefaultCoursesForLoggedInAdmin" classname="com.cjlu.backend.AdminAttendanceTest" time="10.956"/>
+  <system-out><![CDATA[2026-06-14 17:49:03.641 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
 Seeded 45 new roster student(s) (default password = student ID). Roster size is 45.
-2026-06-12 18:54:48.271 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Preparing create tables statements took 1ms
-2026-06-12 18:54:48.274 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Executing create tables statements took 3ms
-2026-06-12 18:54:48.275 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting table columns took 1ms
-2026-06-12 18:54:48.275 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting primary keys took 0ms
-2026-06-12 18:54:48.277 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting column constraints took 1ms
-2026-06-12 18:54:48.277 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Preparing alter table statements took 3ms
-2026-06-12 18:54:48.277 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Executing alter table statements took 0ms
-2026-06-12 18:54:48.278 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Checking mapping consistence took 1ms
-2026-06-12 18:54:48.291 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Preparing create tables statements took 0ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Executing create tables statements took 1ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting table columns took 0ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting primary keys took 0ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Extracting column constraints took 0ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Preparing alter table statements took 0ms
-2026-06-12 18:54:48.292 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Executing alter table statements took 0ms
-2026-06-12 18:54:48.293 [DefaultDispatcher-worker-4 @request#10] INFO  Exposed - Checking mapping consistence took 1ms
+2026-06-14 17:49:14.100 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Preparing create tables statements took 1ms
+2026-06-14 17:49:14.103 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Executing create tables statements took 3ms
+2026-06-14 17:49:14.104 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Extracting table columns took 1ms
+2026-06-14 17:49:14.104 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Extracting primary keys took 0ms
+2026-06-14 17:49:14.106 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Extracting column constraints took 0ms
+2026-06-14 17:49:14.106 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Preparing alter table statements took 3ms
+2026-06-14 17:49:14.106 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Executing alter table statements took 0ms
+2026-06-14 17:49:14.107 [DefaultDispatcher-worker-2 @call-context#3] INFO  Exposed - Checking mapping consistence took 1ms
+2026-06-14 17:49:14.196 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Application started in 10.56 seconds.
+2026-06-14 17:49:14.198 [DefaultDispatcher-worker-3 @coroutine#4] INFO  io.ktor.test - Responding at http://localhost:80
+2026-06-14 17:49:14.198 [DefaultDispatcher-worker-3 @coroutine#4] INFO  io.ktor.test - Responding at https://localhost:443
+2026-06-14 17:49:14.256 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Preparing create tables statements took 0ms
+2026-06-14 17:49:14.256 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Executing create tables statements took 0ms
+2026-06-14 17:49:14.257 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Extracting table columns took 1ms
+2026-06-14 17:49:14.257 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Extracting primary keys took 0ms
+2026-06-14 17:49:14.257 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Extracting column constraints took 0ms
+2026-06-14 17:49:14.257 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Preparing alter table statements took 1ms
+2026-06-14 17:49:14.257 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Executing alter table statements took 0ms
+2026-06-14 17:49:14.258 [DefaultDispatcher-worker-1 @request#10] INFO  Exposed - Checking mapping consistence took 1ms
 ]]></system-out>
   <system-err><![CDATA[CJLU_ALLOW_INSECURE_DEV_DEFAULTS=true: initializing student API key from insecure local fallback. Set STUDENT_API_KEY and unset this flag before any shared or production deployment.
 ]]></system-err>

@@ -16,6 +16,7 @@
             </button>
             <button type="button" class="nav-item" data-panel="register">Register request</button>
             <button type="button" class="nav-item" data-panel="attendance">Attendance rate</button>
+            <button type="button" class="nav-item" data-panel="transcript">Transcript</button>
             <button type="button" class="nav-item" data-panel="learning">Student learning</button>
             <button type="button" class="nav-item" data-panel="calendar">Academic Calendar</button>
             <button type="button" class="nav-item" data-panel="messages">Student inbox</button>
@@ -258,6 +259,10 @@
 
         <section class="panel" data-panel="attendance" id="attendance">
             <#include "partials/attendance-rate-panel.ftl">
+        </section>
+
+        <section class="panel" data-panel="transcript" id="transcript">
+            <#include "partials/transcript-panel.ftl">
         </section>
 
         <section class="panel" data-panel="learning" id="learning">

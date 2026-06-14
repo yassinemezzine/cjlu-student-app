@@ -97,6 +97,19 @@ object RequestSubmissionService {
                         }
                     }
                 }
+            } // Close the attendance_rate block
+            if (req.serviceId == "live_off_campus") {
+                val isApproved = newStatus == RequestStatus.Completed
+                if (isApproved) {
+                    val addressRegex = Regex("""(?:Address|住址):\s*([^\n]+)""")
+                    val address = addressRegex.find(req.notes)?.groupValues?.get(1)?.trim() ?: "Off-campus registered address"
+                    AcademicRepository.updateDormitoryOffCampus(req.studentId, true, address)
+                } else {
+                    AcademicRepository.updateDormitoryOffCampus(req.studentId, false, null)
+                }
+                
+                // Trigger client-side cache refresh for dormitory
+                WebSocketHub.notifyAcademicUpdated(req.studentId, "dormitory")
             }
         }
         return true

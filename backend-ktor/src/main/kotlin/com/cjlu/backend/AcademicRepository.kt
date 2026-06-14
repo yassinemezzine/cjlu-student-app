@@ -38,6 +38,12 @@ object AcademicRepository {
         val sessionsTotal: Int?,
     )
 
+    data class TranscriptGradePatch(
+        val courseCode: String,
+        val scorePercent: Int,
+        val gradePoint: Double,
+    )
+
     private object ClassCourses : Table("class_courses") {
         val courseCode = varchar("course_code", 16)
         val nameEn = varchar("name_en", 200)
@@ -99,6 +105,8 @@ object AcademicRepository {
         val leaveReason = text("leave_reason").nullable()
         val leaveFromDate = varchar("leave_from_date", 16).nullable()
         val leaveToDate = varchar("leave_to_date", 16).nullable()
+        val isOffCampus = bool("is_off_campus").default(false)
+        val offCampusAddress = text("off_campus_address").nullable()
 
         override val primaryKey = PrimaryKey(studentId)
     }
@@ -418,6 +426,8 @@ object AcademicRepository {
                     leaveReason = row[StudentDormitory.leaveReason],
                     leaveFromDate = row[StudentDormitory.leaveFromDate],
                     leaveToDate = row[StudentDormitory.leaveToDate],
+                    isOffCampus = row[StudentDormitory.isOffCampus],
+                    offCampusAddress = row[StudentDormitory.offCampusAddress],
                 )
             }
         }
@@ -438,6 +448,21 @@ object AcademicRepository {
             it[leaveReason] = reason
             it[leaveFromDate] = fromDate
             it[leaveToDate] = toDate
+        }
+        true
+    }
+
+    fun updateDormitoryOffCampus(
+        studentId: String,
+        isOffCampus: Boolean,
+        address: String?
+    ): Boolean = transaction {
+        val sid = studentId.trim()
+        val existing = StudentDormitory.selectAll().where { StudentDormitory.studentId eq sid }.any()
+        if (!existing) return@transaction false
+        StudentDormitory.update({ StudentDormitory.studentId eq sid }) {
+            it[StudentDormitory.isOffCampus] = isOffCampus
+            it[StudentDormitory.offCampusAddress] = address
         }
         true
     }
@@ -610,6 +635,43 @@ object AcademicRepository {
             }
         }
         return getTimetable(sid, preferChinese)
+    }
+
+    fun replaceTranscriptGrades(
+        studentId: String,
+        patches: List<TranscriptGradePatch>,
+    ): StudentTranscriptDto? {
+        val sid = studentId.trim()
+        if (Database.getStudentProfile(sid) == null) return null
+        seedStudentIfMissing(sid, preferChinese = false)
+        transaction {
+            for (patch in patches) {
+                val code = patch.courseCode.trim()
+                if (code.isEmpty()) continue
+                val exists = StudentTranscriptGrades.selectAll()
+                    .where {
+                        (StudentTranscriptGrades.studentId eq sid) and
+                            (StudentTranscriptGrades.courseCode eq code)
+                    }.any()
+                if (exists) {
+                    StudentTranscriptGrades.update({
+                        (StudentTranscriptGrades.studentId eq sid) and
+                            (StudentTranscriptGrades.courseCode eq code)
+                    }) {
+                        it[StudentTranscriptGrades.scorePercent] = patch.scorePercent
+                        it[StudentTranscriptGrades.gradePoint] = patch.gradePoint
+                    }
+                } else {
+                    StudentTranscriptGrades.insert {
+                        it[StudentTranscriptGrades.studentId] = sid
+                        it[StudentTranscriptGrades.courseCode] = code
+                        it[StudentTranscriptGrades.scorePercent] = patch.scorePercent
+                        it[StudentTranscriptGrades.gradePoint] = patch.gradePoint
+                    }
+                }
+            }
+        }
+        return getTranscript(sid, preferChinese = false)
     }
 
     private fun dayLabelFor(dayOfWeek: Int, preferChinese: Boolean): String {
