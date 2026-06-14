@@ -177,6 +177,8 @@ data class StudentDormitoryDto(
     val leaveReason: String? = null,
     val leaveFromDate: String? = null,
     val leaveToDate: String? = null,
+    val isOffCampus: Boolean = false,
+    val offCampusAddress: String? = null,
 )
 
 @Serializable
