@@ -178,18 +178,26 @@ object Database {
     }
 
     init {
+        val dbUrl = getDbUrl()
+        val host = when {
+            dbUrl.contains("@") -> dbUrl.substringAfter("@").substringBefore("/").substringBefore(":")
+            dbUrl.startsWith("jdbc:postgresql://") -> dbUrl.substringAfter("jdbc:postgresql://").substringBefore("/").substringBefore(":")
+            else -> dbUrl
+        }
+        println("[Database] Connecting to database host: $host")
+
         val user = getDbUser()
         val password = getDbPassword()
         if (user != null && password != null) {
             org.jetbrains.exposed.sql.Database.connect(
-                url = getDbUrl(),
+                url = dbUrl,
                 driver = getDbDriver(),
                 user = user,
                 password = password
             )
         } else {
             org.jetbrains.exposed.sql.Database.connect(
-                url = getDbUrl(),
+                url = dbUrl,
                 driver = getDbDriver()
             )
         }
