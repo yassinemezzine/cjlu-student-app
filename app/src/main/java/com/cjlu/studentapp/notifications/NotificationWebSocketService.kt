@@ -85,23 +85,6 @@ class NotificationWebSocketService : Service() {
                 // Keep the connection alive through carrier NATs and firewalls
                 pingIntervalMillis = 20_000L
             }
-            engine {
-                https {
-                    trustManager = object : javax.net.ssl.X509TrustManager {
-                        override fun checkClientTrusted(
-                            chain: Array<out java.security.cert.X509Certificate>?,
-                            authType: String?
-                        ) {}
-
-                        override fun checkServerTrusted(
-                            chain: Array<out java.security.cert.X509Certificate>?,
-                            authType: String?
-                        ) {}
-
-                        override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate> = emptyArray()
-                    }
-                }
-            }
         }
     }
 

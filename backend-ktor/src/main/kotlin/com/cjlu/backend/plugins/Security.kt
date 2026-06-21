@@ -18,6 +18,8 @@ fun Application.configureSecurity() {
         cookie<AdminSession>("ADMIN_SESSION") {
             cookie.path = "/"
             cookie.maxAgeInSeconds = 3600
+            cookie.secure = !DevDefaults.allowInsecure
+            cookie.httpOnly = true
         }
     }
 
