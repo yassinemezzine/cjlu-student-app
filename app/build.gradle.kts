@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
-    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
 }
 
 private fun escapeForBuildConfigString(value: String): String =
@@ -111,6 +110,20 @@ tasks.withType<KotlinCompile>().configureEach {
 
 dependencies {
     implementation(project(":shared-contract"))
+    implementation(project(":core:resources"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:model"))
+    implementation(project(":core:network"))
+    implementation(project(":core:database"))
+    implementation(project(":core:data"))
+    implementation(project(":core:preferences"))
+    implementation(project(":feature:auth"))
+    implementation(project(":feature:academic"))
+    implementation(project(":feature:services"))
+    implementation(project(":feature:messages"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:profile"))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -131,10 +144,6 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
     implementation("androidx.documentfile:documentfile:1.0.1")
 
     implementation("androidx.glance:glance-appwidget:1.1.1")
@@ -144,6 +153,10 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+    implementation("io.ktor:ktor-client-core:3.0.0")
+    implementation("io.ktor:ktor-client-cio:3.0.0")
+    implementation("io.ktor:ktor-client-websockets:3.0.0")
 
     compileOnly("com.google.firebase:firebase-common-ktx:21.0.0")
 

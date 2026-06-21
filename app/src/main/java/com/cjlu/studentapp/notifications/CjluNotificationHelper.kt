@@ -14,14 +14,15 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.cjlu.studentapp.MainActivity
 import com.cjlu.studentapp.R
+import com.cjlu.core.resources.R as CoreR
 import com.cjlu.studentapp.data.RequestStatus
 import com.cjlu.studentapp.data.StudentRequest
 import com.cjlu.studentapp.navigation.Screen
 import com.cjlu.studentapp.widget.CjluWidget
 
-private const val CHANNEL_REQUESTS = "cjlu_requests"
-private const val CHANNEL_MESSAGES = "cjlu_messages"
-private const val CHANNEL_LEARNING = "cjlu_learning"
+internal const val CHANNEL_REQUESTS = "cjlu_requests_v2"
+internal const val CHANNEL_MESSAGES = "cjlu_messages_v2"
+internal const val CHANNEL_LEARNING = "cjlu_learning"
 
 object CjluNotificationHelper {
 
@@ -47,28 +48,28 @@ object CjluNotificationHelper {
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_REQUESTS,
-                context.getString(R.string.notification_channel_requests_name),
-                NotificationManager.IMPORTANCE_DEFAULT,
+                context.getString(CoreR.string.notification_channel_requests_name),
+                NotificationManager.IMPORTANCE_HIGH,
             ).apply {
-                description = context.getString(R.string.notification_channel_requests_description)
+                description = context.getString(CoreR.string.notification_channel_requests_description)
             },
         )
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_MESSAGES,
-                context.getString(R.string.notification_channel_messages_name),
-                NotificationManager.IMPORTANCE_DEFAULT,
+                context.getString(CoreR.string.notification_channel_messages_name),
+                NotificationManager.IMPORTANCE_HIGH,
             ).apply {
-                description = context.getString(R.string.notification_channel_messages_description)
+                description = context.getString(CoreR.string.notification_channel_messages_description)
             },
         )
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_LEARNING,
-                context.getString(R.string.notification_channel_learning_name),
+                context.getString(CoreR.string.notification_channel_learning_name),
                 NotificationManager.IMPORTANCE_HIGH,
             ).apply {
-                description = context.getString(R.string.notification_channel_learning_description)
+                description = context.getString(CoreR.string.notification_channel_learning_description)
             },
         )
     }
@@ -86,14 +87,14 @@ object CjluNotificationHelper {
         )
         val statusLabel = context.getString(request.status.labelRes)
         val title = if (request.status == RequestStatus.Completed) {
-            context.getString(R.string.notification_request_completed_title)
+            context.getString(CoreR.string.notification_request_completed_title)
         } else {
-            context.getString(R.string.notification_request_update_title)
+            context.getString(CoreR.string.notification_request_update_title)
         }
         val text = if (request.status == RequestStatus.Completed) {
-            context.getString(R.string.notification_request_completed_body, request.id, statusLabel)
+            context.getString(CoreR.string.notification_request_completed_body, request.id, statusLabel)
         } else {
-            context.getString(R.string.notification_request_update_body, request.id, statusLabel)
+            context.getString(CoreR.string.notification_request_update_body, request.id, statusLabel)
         }
         val notification = NotificationCompat.Builder(context, CHANNEL_REQUESTS)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -125,7 +126,7 @@ object CjluNotificationHelper {
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_MESSAGES)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_new_message_title, title))
+            .setContentTitle(context.getString(CoreR.string.notification_new_message_title, title))
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -148,8 +149,8 @@ object CjluNotificationHelper {
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_LEARNING)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_attendance_low_title))
-            .setContentText(context.getString(R.string.notification_attendance_low_body, percent))
+            .setContentTitle(context.getString(CoreR.string.notification_attendance_low_title))
+            .setContentText(context.getString(CoreR.string.notification_attendance_low_body, percent))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pending)
             .setAutoCancel(true)
@@ -170,7 +171,7 @@ object CjluNotificationHelper {
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_LEARNING)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_class_update_title))
+            .setContentTitle(context.getString(CoreR.string.notification_class_update_title))
             .setContentText(notice)
             .setStyle(NotificationCompat.BigTextStyle().bigText(notice))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -193,8 +194,8 @@ object CjluNotificationHelper {
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_LEARNING)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_attendance_updated_title))
-            .setContentText(context.getString(R.string.notification_attendance_updated_body))
+            .setContentTitle(context.getString(CoreR.string.notification_attendance_updated_title))
+            .setContentText(context.getString(CoreR.string.notification_attendance_updated_body))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pending)
             .setAutoCancel(true)
@@ -216,8 +217,8 @@ object CjluNotificationHelper {
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_MESSAGES)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_messages_refresh_title))
-            .setContentText(context.getString(R.string.notification_messages_refresh_body))
+            .setContentTitle(context.getString(CoreR.string.notification_messages_refresh_title))
+            .setContentText(context.getString(CoreR.string.notification_messages_refresh_body))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pending)
             .setAutoCancel(true)

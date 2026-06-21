@@ -24,7 +24,9 @@ The project is structured as a multi-module Gradle project with three primary su
 ```
 
 ### A. Android Client App (`/app`)
+
 A modern, native Android application built using:
+
 * **UI Framework**: Jetpack Compose (Kotlin declarative UI) with Material 3 styling.
 * **Network Client**: Retrofit 2 & OkHttp 3 for REST endpoint communication.
 * **Local Persistence (Room)**: Uses a local SQLite database (`cjlu_database`) to support local-first reads and an offline-first sync queue.
@@ -33,7 +35,9 @@ A modern, native Android application built using:
 * **Push Notifications**: Integrated with Firebase Cloud Messaging (FCM) to trigger background updates.
 
 ### B. Backend Web Server (`/backend-ktor`)
+
 An asynchronous Kotlin web server built on:
+
 * **Server Framework**: Ktor, using Netty.
 * **Persistence & ORM**: Exposed ORM with an H2 file-backed relational database (`requests_sql_db.mv.db`).
 * **Templating Engine**: Apache FreeMarker to render the server-side Web Admin Portal interface.
@@ -41,6 +45,7 @@ An asynchronous Kotlin web server built on:
 * **WebSockets**: A persistent WebSocket hub (`WebSocketHub`) that triggers updates directly to connected student devices.
 
 ### C. Shared Serialization Module (`/shared-contract`)
+
 A shared library containing all Kotlin data transfer objects (DTOs) and serialization schemas (`kotlinx.serialization`). It is imported by both the Android app and Ktor backend to guarantee end-to-end API contract safety.
 
 ---
@@ -48,7 +53,7 @@ A shared library containing all Kotlin data transfer objects (DTOs) and serializ
 ## 2. Key Features
 
 | Feature Area | Description |
-|---|---|
+| :--- | :--- |
 | **Identity & Profiles** | JWT-authenticated registration/login, device profile edits, and secure password updates. |
 | **Academic Performance** | Visual representation of course-level and overall attendance metrics, weekly historical trends, current GPA, and official transcript grades. |
 | **Class Schedules** | Comprehensive weekly timetables displaying course names, rooms, times, and instructors. |
@@ -62,10 +67,12 @@ A shared library containing all Kotlin data transfer objects (DTOs) and serializ
 ## 3. Data & Persistence Model
 
 ### A. Android App (Room DB)
+
 * **`academic_cache`**: Caches Snapshots of academic data (Attendance, Transcripts, Timetables, and Dormitory information) in JSON format for offline rendering.
 * **`student_requests`**: Stores student service requests locally with synchronization state trackers.
 
 ### B. Ktor Server (H2 DB via Exposed)
+
 * **Student Accounts (`students`)**: Holds enrollment information, hashed credentials, overall attendance, and major details.
 * **Service Requests (`student_requests`)**: System of record for student requests, status tracking (`Submitted`, `InReview`, `Completed`, `Rejected`), and uploaded file paths.
 * **Inbox Messages (`inbox_messages`)**: Stores notifications. Broad reception is supported by setting `recipient_student_id` to `null`.
@@ -74,7 +81,9 @@ A shared library containing all Kotlin data transfer objects (DTOs) and serializ
 ---
 
 ## 4. Deterministic Seed Roster
+
 To facilitate local development and verification, the backend automatically initializes an in-memory or file database with:
+
 * **Roster**: **47 predefined student profiles** categorized into different course blocks (Level 1 and Level 2).
 * **Initial State**: Each student profile gets seeded with personalized academic data (attendance details, transcripts, timetables, and dorm placements).
 * **Credentials**: The default password for all seed accounts is set as their respective **Student ID** (e.g., student `20230901` uses password `20230901`).

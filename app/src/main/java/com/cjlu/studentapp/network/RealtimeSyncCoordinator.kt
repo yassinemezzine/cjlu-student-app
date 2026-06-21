@@ -9,6 +9,7 @@ import com.cjlu.studentapp.data.AppDatabase
 import com.cjlu.studentapp.data.MessagesRepository
 import com.cjlu.studentapp.data.RequestManager
 import com.cjlu.studentapp.data.StudentRequest
+import com.cjlu.studentapp.data.toEntity
 import com.cjlu.studentapp.network.api.MessageDto
 import com.cjlu.studentapp.notifications.LearningAlertsNotifier
 import com.cjlu.studentapp.prefs.AppNotificationPrefs
@@ -92,7 +93,7 @@ class RealtimeSyncCoordinator(
             is RealtimePushAction.RequestUpdated -> {
                 AppDatabase.getDatabase(context)
                     .studentRequestDao()
-                    .insert(action.request)
+                    .insert(action.request.toEntity())
                 onEffect(
                     RealtimeSyncEffect.RequestUpdated(
                         request = action.request,

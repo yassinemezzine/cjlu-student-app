@@ -23,7 +23,10 @@ class RealtimeManager(
     private var hasConnectedOnce = false
 
     private val wsUrl: String
-        get() = "ws://${BuildConfig.API_HOST}:${BuildConfig.API_PORT}/updates/$studentId"
+        get() {
+            val scheme = if (BuildConfig.API_PORT == 443) "wss" else "ws"
+            return "$scheme://${BuildConfig.API_HOST}:${BuildConfig.API_PORT}/updates/$studentId"
+        }
 
     private val reconnectRunnable = Runnable {
         if (!stopped) {

@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.cjlu.studentapp.R
+import com.cjlu.core.resources.R
 import com.cjlu.studentapp.navigation.Screen
 
 data class BottomNavItem(

@@ -5,7 +5,7 @@ Android student mobile app for China Jiliang University (CJLU), with a Ktor back
 ## Features
 
 | Area | Description |
-|------|-------------|
+| :--- | :--- |
 | **Login & profile** | JWT login, password change, student profile |
 | **Home** | Attendance rate, class schedule, quick actions |
 | **Campus services** | 25+ service catalog (leave, room change, transcripts, etc.) with file uploads and offline sync |
@@ -43,7 +43,7 @@ Without the service account file, the backend still runs; only FCM delivery is s
 ## Tech stack
 
 | Component | Technology |
-|-----------|------------|
+| :--- | :--- |
 | Android client | Kotlin, Jetpack Compose, Navigation, Room, Retrofit, OkHttp, Glance, Firebase Messaging |
 | Backend | Ktor, Exposed ORM, H2, FreeMarker (admin UI), WebSocket |
 | Shared contract | `shared-contract` module (kotlinx-serialization DTOs shared by app and backend) |
@@ -51,7 +51,7 @@ Without the service account file, the backend still runs; only FCM delivery is s
 
 ## Project layout
 
-```
+```text
 CJLUStudentApp/
 ├── app/                    # Android client
 ├── backend-ktor/           # Ktor HTTP API + admin portal (see backend-ktor/README.md)
@@ -74,7 +74,7 @@ cjlu.student.api.key=cjlu-insecure-local-student-api-key-do-not-use-in-productio
 ```
 
 | Environment | `cjlu.api.host` |
-|-------------|-----------------|
+| :--- | :--- |
 | Emulator | `10.0.2.2` |
 | Physical device (same Wi‑Fi) | Your machine's LAN IP (e.g. `192.168.1.10`) |
 
@@ -88,17 +88,17 @@ From the project root:
 ./gradlew :backend-ktor:run
 ```
 
-The server listens on **http://0.0.0.0:8080** by default.
+The server listens on **<http://0.0.0.0:8080>** by default.
 
 Development mode (`gradlew run` sets `CJLU_ALLOW_INSECURE_DEV_DEFAULTS=true` automatically):
 
 | Setting | Dev default |
-|---------|-------------|
+| :--- | :--- |
 | Student API key | `cjlu-insecure-local-student-api-key-do-not-use-in-production` |
 | Admin login | `admin` / `cjlu2026` |
 | Default student password | Same as student ID (e.g. `20230901`) |
 
-Admin portal: http://localhost:8080/admin/login
+Admin portal: <http://localhost:8080/admin/login>
 
 ### 3. Run the Android app
 
@@ -123,7 +123,7 @@ GitHub Actions runs these checks on push/PR to `main` or `master`.
 Set these environment variables on the backend (**do not** enable `CJLU_ALLOW_INSECURE_DEV_DEFAULTS`):
 
 | Variable | Description |
-|----------|-------------|
+| :--- | :--- |
 | `STUDENT_API_KEY` | Must match `cjlu.student.api.key` in the app |
 | `JWT_SECRET` | At least 32 characters |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Admin portal credentials |

@@ -24,7 +24,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.cjlu.studentapp.MainActivity
-import com.cjlu.studentapp.R
+import com.cjlu.core.resources.R
 import com.cjlu.studentapp.prefs.WidgetStatsStore
 
 class CjluAppWidget : GlanceAppWidget() {

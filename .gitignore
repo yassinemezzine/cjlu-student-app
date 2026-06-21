@@ -1,16 +1,37 @@
 *.iml
-.gradle
+.gradle/
+**/.gradle/
+.kotlin/
 /local.properties
 /.idea/caches
 /.idea/libraries
+/.idea/modules/
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
+**/.DS_Store
+/build/
+**/build/
+**/bin/
 /captures
 .externalNativeBuild
 .cxx
 local.properties
 backend-ktor/fcm-service-account.json
+/cjlu-student-backend/
+
+# Android packages and generated release metadata
+*.apk
+*.aab
+*.ap_
+*.dm
+output-metadata.json
+
+# Local credentials and signing material
+*.jks
+*.keystore
+
+# Backend runtime data
+backend-ktor/uploads/

@@ -29,9 +29,16 @@ object RealtimePushHandler {
             "academic_updated" -> return RealtimePushAction.InvalidateAcademicCache
         }
 
+        if (obj.isEmpty()) {
+            return RealtimePushAction.RefreshMessages
+        }
+
+        if (obj.containsKey("scope")) {
+            return RealtimePushAction.InvalidateAcademicCache
+        }
+
         val looksLikeLearningPush =
             obj.containsKey("overallAttendancePercent") &&
-                obj.containsKey("classUpdateAtMillis") &&
                 !obj.containsKey("serviceId")
         if (looksLikeLearningPush) {
             return RealtimePushAction.SyncLearningAlerts
